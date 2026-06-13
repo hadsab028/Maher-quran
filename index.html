@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<!--
+  ============================================
+  التطبيق: ماهر بالقرآن
+  المطوّرة: هاجر
+  البريد الإلكتروني: hadsab028@gmail.com
+  تاريخ الإنشاء: 13 يونيو 2026
+  جميع الحقوق محفوظة © هاجر 2026
+  ============================================
+-->
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ماهر بالقرآن</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Tajawal:wght@400;500;700&display=swap');
+
+  :root {
+    --blue-dark: #2c6e9e;
+    --blue-mid: #5b9ec9;
+    --blue-light: #a8d4f0;
+    --blue-pastel: #dff0fb;
+    --blue-soft: #eef7fd;
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --cream: #f4faff;
+    --cream-dark: #daeefa;
+    --text-dark: #1a2a3a;
+    --text-mid: #3a5a7a;
+    --error: #c0392b;
+    --success: #2980b9;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #5b9ec9, #a8d4f0);
+    padding: 18px 24px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(91,158,201,0.25);
+    position: relative;
+  }
+  header h1 {
+    font-family: 'Amiri Quran', serif;
+    font-size: 1.8rem;
+    color: #fff;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  }
+  header p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.85);
+    margin-top: 4px;
+  }
+  .bismillah {
+    font-family: 'Amiri Quran', serif;
+    font-size: 1.5rem;
+    color: var(--gold-light);
+    margin-bottom: 6px;
+  }
+  .app-brand {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.7);
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  /* MAIN LAYOUT */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 20px 16px;
+  }
+
+  /* CARD */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 10px rgba(91,158,201,0.1);
+    border: 1px solid var(--cream-dark);
+  }
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--blue-pastel);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .icon { font-size: 1.3rem; }
+
+  /* RIWAYA SELECTOR */
+  .riwaya-btns {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .riwaya-btn {
+    flex: 1;
+    min-width: 130px;
+    padding: 14px 10px;
+    border-radius: 12px;
+    border: 2px solid var(--cream-dark);
+    background: var(--cream);
+    cursor: pointer;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-mid);
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .riwaya-btn:hover { border-color: var(--blue-mid); }
+  .riwaya-btn.active {
+    background: var(--blue-mid);
+    color: white;
+    border-color: var(--blue-mid);
+  }
+  .riwaya-btn small { display: block; font-size: 0.78rem; font-weight: 400; margin-top: 2px; opacity: 0.85; }
+
+  /* INPUTS */
+  select, input[type=number] {
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: 10px;
+    border: 2px solid var(--cream-dark);
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1.05rem;
+    background: var(--cream);
+    color: var(--text-dark);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  select:focus, input[type=number]:focus { border-color: var(--blue-mid); }
+
+  .row2 { display: flex; gap: 12px; flex-wrap: wrap; }
+  .row2 > * { flex: 1; min-width: 140px; }
+  label { font-size: 0.95rem; color: var(--text-mid); font-weight: 500; margin-bottom: 6px; display: block; }
+
+  .repeat-info {
+    background: var(--blue-soft);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.92rem;
+    color: var(--text-mid);
+    line-height: 1.9;
+    margin-top: 14px;
+  }
+  .repeat-info b { color: var(--blue-dark); }
+
+  /* AYAH DISPLAY */
+  #ayahDisplay {
+    background: linear-gradient(160deg, var(--blue-soft), #fff);
+    border: 1px solid var(--blue-pastel);
+    border-radius: 14px;
+    padding: 26px 20px;
+    text-align: center;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+  .ayah-number-badge {
+    background: var(--blue-mid);
+    color: white;
+    font-size: 0.85rem;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .ayah-text {
+    font-family: 'Amiri Quran', serif;
+    font-size: 1.85rem;
+    line-height: 2.2;
+    color: var(--text-dark);
+    direction: rtl;
+  }
+  .ayah-text.hide-text { filter: blur(6px); user-select: none; }
+  .group-label {
+    font-size: 0.88rem;
+    color: var(--blue-mid);
+    background: var(--blue-pastel);
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+  .repeat-counter {
+    font-size: 0.95rem;
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 4px;
+  }
+  .btn {
+    padding: 13px 22px;
+    border-radius: 12px;
+    border: none;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: var(--blue-mid);
+    color: white;
+    flex: 1;
+    min-width: 130px;
+    justify-content: center;
+    font-size: 1.08rem;
+    padding: 15px;
+  }
+  .btn-primary:hover { background: var(--blue-dark); }
+  .btn-secondary {
+    background: var(--cream-dark);
+    color: var(--text-dark);
+    flex: 1;
+    min-width: 110px;
+    justify-content: center;
+  }
+  .btn-secondary:hover { background: #c5e0f0; }
+  .btn-gold {
+    background: var(--gold);
+    color: white;
+    flex: 1;
+    min-width: 130px;
+    justify-content: center;
+  }
+  .btn-gold:hover { background: #b8932a; }
+  .btn-danger {
+    background: var(--error);
+    color: white;
+    flex: 1;
+    min-width: 130px;
+    justify-content: center;
+  }
+
+  #speechSection { display: none; }
+
+  .mic-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .mic-status.idle { background: var(--cream-dark); color: var(--text-mid); }
+  .mic-status.listening { background: var(--blue-pastel); color: var(--blue-dark); }
+  .mic-status.error { background: #fdecea; color: var(--error); }
+
+  .mic-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .mic-dot.pulse { animation: pulse 1s infinite; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  #transcriptBox {
+    background: #f9fbff;
+    border: 2px solid #d0e8f5;
+    border-radius: 12px;
+    padding: 16px;
+    min-height: 90px;
+    font-family: 'Amiri Quran', serif;
+    font-size: 1.4rem;
+    line-height: 2;
+    direction: rtl;
+    text-align: right;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+    transition: border-color 0.3s;
+    white-space: pre-wrap;
+  }
+  #transcriptBox.correct { border-color: var(--success); background: #eaf4fb; }
+  #transcriptBox.wrong { border-color: var(--error); background: #fef6f6; }
+
+  .match-feedback {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 8px;
+  }
+  .match-feedback.correct { background: var(--blue-pastel); color: var(--blue-dark); }
+  .match-feedback.wrong { background: #fdecea; color: var(--error); }
+  .match-feedback.partial { background: #fff8e1; color: #e67e22; }
+
+  .progress-bar-wrap {
+    background: var(--cream-dark);
+    border-radius: 20px;
+    height: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue-mid), var(--gold));
+    border-radius: 20px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    margin-top: 6px;
+  }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .toggle-label { font-size: 0.95rem; color: var(--text-mid); }
+  .toggle {
+    position: relative;
+    width: 48px; height: 26px;
+    flex-shrink: 0;
+  }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute;
+    inset: 0;
+    background: #ccc;
+    border-radius: 26px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .slider:before {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    left: 3px; top: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+  }
+  input:checked + .slider { background: var(--blue-mid); }
+  input:checked + .slider:before { transform: translateX(22px); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    border-top: 1px solid var(--cream-dark);
+    margin-top: 10px;
+  }
+  footer b { color: var(--blue-dark); }
+
+  @media (max-width: 500px) {
+    .ayah-text { font-size: 1.5rem; }
+    header h1 { font-size: 1.4rem; }
+    .btn { font-size: 0.95rem; padding: 12px 14px; }
+  }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+  <h1>🌙 ماهر بالقرآن</h1>
+  <p>تعلّم وراجع بأسلوب التكرار التدريجي</p>
+  <div class="app-brand">تطبيق ماهر بالقرآن — جميع الحقوق محفوظة</div>
+</header>
+
+<div class="container">
+
+  <!-- RIWAYA -->
+  <div class="card">
+    <div class="card-title"><span class="icon">📖</span> اختر الرواية</div>
+    <div class="riwaya-btns">
+      <button class="riwaya-btn active" onclick="setRiwaya('hafs')" id="btn-hafs">
+        رواية حفص
+        <small>عن عاصم — الأكثر انتشاراً</small>
+      </button>
+      <button class="riwaya-btn" onclick="setRiwaya('warsh')" id="btn-warsh">
+        رواية ورش
+        <small>عن نافع — شائعة في المغرب</small>
+      </button>
+    </div>
+  </div>
+
+  <!-- SURAH & RANGE -->
+  <div class="card">
+    <div class="card-title"><span class="icon">🔖</span> اختر السورة والآيات</div>
+    <div style="margin-bottom:14px">
+      <label>السورة</label>
+      <select id="surahSelect" onchange="onSurahChange()"></select>
+    </div>
+    <div class="row2">
+      <div>
+        <label>من الآية</label>
+        <input type="number" id="startAyah" min="1" value="1">
+      </div>
+      <div>
+        <label>إلى الآية</label>
+        <input type="number" id="endAyah" min="1" value="5">
+      </div>
+      <div>
+        <label>تكرار كل آية</label>
+        <input type="number" id="repeatCount" min="1" max="20" value="3">
+      </div>
+    </div>
+    <div class="repeat-info" id="repeatInfo">
+      📝 سيتم تكرار كل آية <b>3 مرات</b>، ثم تُضاف الآية التالية وتُكرَّر معها، وهكذا تدريجياً حتى تحفظ المقطع كاملاً.
+    </div>
+  </div>
+
+  <!-- SESSION DISPLAY -->
+  <div class="card" id="sessionCard" style="display:none">
+    <div class="card-title"><span class="icon">📜</span> جلسة الحفظ</div>
+
+    <div id="ayahDisplay">
+      <div style="color:#aaa; font-size:1rem">اضغط "ابدأ الجلسة" للبدء</div>
+    </div>
+
+    <div class="toggle-row" style="margin-top:14px">
+      <label class="toggle">
+        <input type="checkbox" id="hideToggle" onchange="toggleHide()">
+        <span class="slider"></span>
+      </label>
+      <span class="toggle-label">أخفِ النص للاختبار الذاتي</span>
+    </div>
+
+    <div class="progress-bar-wrap" style="margin-top:16px">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-label">
+      <span id="progressText">التقدم</span>
+      <span id="progressPct">0%</span>
+    </div>
+
+    <div class="controls" style="margin-top:16px">
+      <button class="btn btn-secondary" onclick="prevStep()">⬅ السابق</button>
+      <button class="btn btn-primary" onclick="nextStep()">التالي ➡</button>
+    </div>
+  </div>
+
+  <!-- SPEECH SECTION -->
+  <div class="card" id="speechSection">
+    <div class="card-title"><span class="icon">🎤</span> اقرأ وتابع</div>
+    <p style="font-size:0.95rem; color:var(--text-mid); margin-bottom:14px">
+      اضغط "ابدأ الاستماع" ثم اقرأ الآية — سيكتب التطبيق ما تقرأ ويتوقف عند أي خطأ.
+    </p>
+    <div class="mic-status idle" id="micStatus">
+      <div class="mic-dot" id="micDot"></div>
+      <span id="micStatusText">الميكروفون غير نشط</span>
+    </div>
+    <div id="transcriptBox" dir="rtl"></div>
+    <div class="match-feedback hidden" id="matchFeedback"></div>
+    <div class="controls">
+      <button class="btn btn-gold" id="micStartBtn" onclick="startListening()">🎤 ابدأ الاستماع</button>
+      <button class="btn btn-danger hidden" id="micStopBtn" onclick="stopListening()">⏹ إيقاف</button>
+      <button class="btn btn-secondary" onclick="resetTranscript()">🔄 مسح</button>
+    </div>
+  </div>
+
+  <!-- START BUTTON -->
+  <div id="startArea">
+    <button class="btn btn-primary" style="width:100%; font-size:1.15rem; padding:17px" onclick="startSession()">
+      🌟 ابدأ جلسة الحفظ
+    </button>
+  </div>
+
+</div>
+
+<footer>
+  <b>ماهر بالقرآن</b> — تطبيق لمساعدتك على حفظ كتاب الله 🌙<br>
+  <span style="font-size:0.8rem; opacity:0.7">جميع الحقوق محفوظة © 2026</span>
+</footer>
+
+<script>
+// ============================================
+// المطوّرة: هاجر | hadsab028@gmail.com
+// تاريخ الإنشاء: 13 يونيو 2025
+// ماهر بالقرآن — جميع الحقوق محفوظة © 2026
+// ============================================
+
+const SURAHS = [
+  {n:1,name:"الفاتحة",count:7},{n:2,name:"البقرة",count:286},{n:3,name:"آل عمران",count:200},
+  {n:4,name:"النساء",count:176},{n:5,name:"المائدة",count:120},{n:6,name:"الأنعام",count:165},
+  {n:7,name:"الأعراف",count:206},{n:8,name:"الأنفال",count:75},{n:9,name:"التوبة",count:129},
+  {n:10,name:"يونس",count:109},{n:11,name:"هود",count:123},{n:12,name:"يوسف",count:111},
+  {n:13,name:"الرعد",count:43},{n:14,name:"إبراهيم",count:52},{n:15,name:"الحجر",count:99},
+  {n:16,name:"النحل",count:128},{n:17,name:"الإسراء",count:111},{n:18,name:"الكهف",count:110},
+  {n:19,name:"مريم",count:98},{n:20,name:"طه",count:135},{n:21,name:"الأنبياء",count:112},
+  {n:22,name:"الحج",count:78},{n:23,name:"المؤمنون",count:118},{n:24,name:"النور",count:64},
+  {n:25,name:"الفرقان",count:77},{n:26,name:"الشعراء",count:227},{n:27,name:"النمل",count:93},
+  {n:28,name:"القصص",count:88},{n:29,name:"العنكبوت",count:69},{n:30,name:"الروم",count:60},
+  {n:31,name:"لقمان",count:34},{n:32,name:"السجدة",count:30},{n:33,name:"الأحزاب",count:73},
+  {n:34,name:"سبأ",count:54},{n:35,name:"فاطر",count:45},{n:36,name:"يس",count:83},
+  {n:37,name:"الصافات",count:182},{n:38,name:"ص",count:88},{n:39,name:"الزمر",count:75},
+  {n:40,name:"غافر",count:85},{n:41,name:"فصلت",count:54},{n:42,name:"الشورى",count:53},
+  {n:43,name:"الزخرف",count:89},{n:44,name:"الدخان",count:59},{n:45,name:"الجاثية",count:37},
+  {n:46,name:"الأحقاف",count:35},{n:47,name:"محمد",count:38},{n:48,name:"الفتح",count:29},
+  {n:49,name:"الحجرات",count:18},{n:50,name:"ق",count:45},{n:51,name:"الذاريات",count:60},
+  {n:52,name:"الطور",count:49},{n:53,name:"النجم",count:62},{n:54,name:"القمر",count:55},
+  {n:55,name:"الرحمن",count:78},{n:56,name:"الواقعة",count:96},{n:57,name:"الحديد",count:29},
+  {n:58,name:"المجادلة",count:22},{n:59,name:"الحشر",count:24},{n:60,name:"الممتحنة",count:13},
+  {n:61,name:"الصف",count:14},{n:62,name:"الجمعة",count:11},{n:63,name:"المنافقون",count:11},
+  {n:64,name:"التغابن",count:18},{n:65,name:"الطلاق",count:12},{n:66,name:"التحريم",count:12},
+  {n:67,name:"الملك",count:30},{n:68,name:"القلم",count:52},{n:69,name:"الحاقة",count:52},
+  {n:70,name:"المعارج",count:44},{n:71,name:"نوح",count:28},{n:72,name:"الجن",count:28},
+  {n:73,name:"المزمل",count:20},{n:74,name:"المدثر",count:56},{n:75,name:"القيامة",count:40},
+  {n:76,name:"الإنسان",count:31},{n:77,name:"المرسلات",count:50},{n:78,name:"النبأ",count:40},
+  {n:79,name:"النازعات",count:46},{n:80,name:"عبس",count:42},{n:81,name:"التكوير",count:29},
+  {n:82,name:"الانفطار",count:19},{n:83,name:"المطففين",count:36},{n:84,name:"الانشقاق",count:25},
+  {n:85,name:"البروج",count:22},{n:86,name:"الطارق",count:17},{n:87,name:"الأعلى",count:19},
+  {n:88,name:"الغاشية",count:26},{n:89,name:"الفجر",count:30},{n:90,name:"البلد",count:20},
+  {n:91,name:"الشمس",count:15},{n:92,name:"الليل",count:21},{n:93,name:"الضحى",count:11},
+  {n:94,name:"الشرح",count:8},{n:95,name:"التين",count:8},{n:96,name:"العلق",count:19},
+  {n:97,name:"القدر",count:5},{n:98,name:"البينة",count:8},{n:99,name:"الزلزلة",count:8},
+  {n:100,name:"العاديات",count:11},{n:101,name:"القارعة",count:11},{n:102,name:"التكاثر",count:8},
+  {n:103,name:"العصر",count:3},{n:104,name:"الهمزة",count:9},{n:105,name:"الفيل",count:5},
+  {n:106,name:"قريش",count:4},{n:107,name:"الماعون",count:7},{n:108,name:"الكوثر",count:3},
+  {n:109,name:"الكافرون",count:6},{n:110,name:"النصر",count:3},{n:111,name:"المسد",count:5},
+  {n:112,name:"الإخلاص",count:4},{n:113,name:"الفلق",count:5},{n:114,name:"الناس",count:6}
+];
+
+let riwaya = 'hafs';
+let currentSurah = 1;
+let steps = [];
+let stepIndex = 0;
+let ayahsCache = {};
+let sessionActive = false;
+let hideText = false;
+let recognition = null;
+let isListening = false;
+
+window.onload = () => {
+  const sel = document.getElementById('surahSelect');
+  SURAHS.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.n;
+    opt.textContent = `${s.n}. سورة ${s.name} (${s.count} آية)`;
+    sel.appendChild(opt);
+  });
+  onSurahChange();
+  setupSpeechRecognition();
+  document.getElementById('repeatCount').addEventListener('input', updateRepeatInfo);
+  updateRepeatInfo();
+};
+
+function onSurahChange() {
+  const n = +document.getElementById('surahSelect').value;
+  currentSurah = n;
+  const s = SURAHS.find(x => x.n === n);
+  document.getElementById('startAyah').max = s.count;
+  document.getElementById('endAyah').max = s.count;
+  document.getElementById('endAyah').value = Math.min(5, s.count);
+  document.getElementById('startAyah').value = 1;
+}
+
+function setRiwaya(r) {
+  riwaya = r;
+  document.getElementById('btn-hafs').classList.toggle('active', r === 'hafs');
+  document.getElementById('btn-warsh').classList.toggle('active', r === 'warsh');
+  ayahsCache = {};
+}
+
+function updateRepeatInfo() {
+  const r = +document.getElementById('repeatCount').value || 3;
+  document.getElementById('repeatInfo').innerHTML =
+    `📝 سيتم تكرار كل آية <b>${r} مرات</b>، ثم تُضاف الآية التالية وتُكرَّر معها، وهكذا تدريجياً حتى تحفظ المقطع كاملاً.`;
+}
+
+async function fetchAyah(surah, ayah) {
+  const key = `${riwaya}_${surah}_${ayah}`;
+  if (ayahsCache[key]) return ayahsCache[key];
+  const edition = 'quran-uthmani';
+  try {
+    const res = await fetch(`https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/${edition}`);
+    const data = await res.json();
+    if (data.code === 200) {
+      ayahsCache[key] = data.data.text;
+      return data.data.text;
+    }
+  } catch(e) {}
+  return '...';
+}
+
+function buildSteps(start, end, rep) {
+  const steps = [];
+  for (let i = start; i <= end; i++) {
+    const group = [];
+    for (let j = start; j <= i; j++) group.push(j);
+    for (let r = 0; r < rep; r++) {
+      steps.push({ ayahs: [...group], repNum: r + 1, totalRep: rep });
+    }
+  }
+  return steps;
+}
+
+async function startSession() {
+  const start = +document.getElementById('startAyah').value;
+  const end = +document.getElementById('endAyah').value;
+  const rep = +document.getElementById('repeatCount').value || 3;
+  if (start > end) { alert('الآية الأولى يجب أن تكون قبل الأخيرة'); return; }
+  steps = buildSteps(start, end, rep);
+  stepIndex = 0;
+  document.getElementById('startArea').style.display = 'none';
+  document.getElementById('sessionCard').style.display = 'block';
+  document.getElementById('speechSection').style.display = 'block';
+  sessionActive = true;
+  await renderStep();
+}
+
+async function renderStep() {
+  if (stepIndex >= steps.length) { showFinish(); return; }
+  const step = steps[stepIndex];
+  const total = steps.length;
+  const pct = Math.round((stepIndex / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressText').textContent = `خطوة ${stepIndex + 1} من ${total}`;
+  const texts = await Promise.all(step.ayahs.map(a => fetchAyah(currentSurah, a)));
+  const surahName = SURAHS.find(s => s.n === currentSurah)?.name;
+  const groupLabel = step.ayahs.length === 1
+    ? `الآية ${step.ayahs[0]}`
+    : `الآيات ${step.ayahs[0]} — ${step.ayahs[step.ayahs.length - 1]}`;
+  document.getElementById('ayahDisplay').innerHTML = `
+    <div class="ayah-number-badge">سورة ${surahName} • ${groupLabel}</div>
+    <div class="ayah-text ${hideText ? 'hide-text' : ''}" id="mainText">${texts.join(' ۝ ')}</div>
+    <div class="group-label">📋 ${groupLabel} • التكرار ${step.repNum} / ${step.totalRep}</div>
+    <div class="repeat-counter">${'●'.repeat(step.repNum)}${'○'.repeat(step.totalRep - step.repNum)}</div>
+  `;
+  window._currentGroupText = texts.join(' ');
+  resetTranscript();
+}
+
+function nextStep() { stepIndex = Math.min(stepIndex + 1, steps.length); renderStep(); }
+function prevStep() { stepIndex = Math.max(stepIndex - 1, 0); renderStep(); }
+function toggleHide() {
+  hideText = document.getElementById('hideToggle').checked;
+  const t = document.getElementById('mainText');
+  if (t) t.classList.toggle('hide-text', hideText);
+}
+
+function showFinish() {
+  document.getElementById('ayahDisplay').innerHTML = `
+    <div style="text-align:center; padding:20px">
+      <div style="font-size:3rem; margin-bottom:12px">🎉</div>
+      <div style="font-size:1.4rem; font-weight:700; color:var(--blue-dark)">أحسنت! أكملت الجلسة</div>
+      <div style="font-size:1rem; color:var(--text-mid); margin-top:8px">جزاك الله خيراً على مواظبتك على حفظ كتاب الله</div>
+      <button class="btn btn-primary" style="margin-top:20px; width:100%" onclick="resetSession()">🔄 جلسة جديدة</button>
+    </div>`;
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressPct').textContent = '100%';
+}
+
+function resetSession() {
+  steps = []; stepIndex = 0; sessionActive = false;
+  document.getElementById('startArea').style.display = 'block';
+  document.getElementById('sessionCard').style.display = 'none';
+  document.getElementById('speechSection').style.display = 'none';
+  document.getElementById('progressFill').style.width = '0%';
+  stopListening();
+}
+
+function setupSpeechRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    document.getElementById('micStartBtn').disabled = true;
+    document.getElementById('micStartBtn').textContent = '🎤 غير مدعوم في هذا المتصفح';
+    return;
+  }
+  recognition = new SR();
+  recognition.lang = 'ar-SA';
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.onresult = (event) => {
+    let t = '';
+    for (let i = 0; i < event.results.length; i++) t += event.results[i][0].transcript;
+    updateTranscript(t.trim());
+  };
+  recognition.onend = () => { if (isListening) recognition.start(); };
+  recognition.onerror = (e) => { if (e.error !== 'no-speech') setMicStatus('error', 'خطأ: ' + e.error); };
+}
+
+function startListening() {
+  if (!recognition) return;
+  isListening = true;
+  recognition.start();
+  setMicStatus('listening', 'يستمع إليك...');
+  document.getElementById('micStartBtn').classList.add('hidden');
+  document.getElementById('micStopBtn').classList.remove('hidden');
+  document.getElementById('transcriptBox').textContent = '';
+  document.getElementById('matchFeedback').classList.add('hidden');
+}
+
+function stopListening() {
+  if (!recognition) return;
+  isListening = false;
+  try { recognition.stop(); } catch(e){}
+  setMicStatus('idle', 'الميكروفون غير نشط');
+  document.getElementById('micStartBtn').classList.remove('hidden');
+  document.getElementById('micStopBtn').classList.add('hidden');
+}
+
+function setMicStatus(state, text) {
+  const el = document.getElementById('micStatus');
+  el.className = 'mic-status ' + state;
+  document.getElementById('micStatusText').textContent = text;
+  document.getElementById('micDot').className = 'mic-dot' + (state === 'listening' ? ' pulse' : '');
+}
+
+function updateTranscript(spoken) {
+  const box = document.getElementById('transcriptBox');
+  const fb = document.getElementById('matchFeedback');
+  const reference = normalizeArabic(window._currentGroupText || '');
+  const spokenNorm = normalizeArabic(spoken);
+  box.textContent = spoken;
+  if (!reference || !spokenNorm) return;
+  const refWords = reference.split(' ').filter(Boolean);
+  const spokenWords = spokenNorm.split(' ').filter(Boolean);
+  let matchCount = 0; let mismatch = false;
+  for (let i = 0; i < spokenWords.length; i++) {
+    if (i >= refWords.length) break;
+    if (spokenWords[i] === refWords[i]) matchCount++;
+    else { mismatch = true; break; }
+  }
+  fb.classList.remove('hidden');
+  if (mismatch) {
+    box.className = 'wrong';
+    fb.className = 'match-feedback wrong';
+    fb.textContent = '⚠️ خطأ — راجع الآية وأعد المحاولة';
+    stopListening();
+    setMicStatus('error', 'توقف — يوجد خطأ في القراءة');
+  } else if (matchCount === refWords.length) {
+    box.className = 'correct';
+    fb.className = 'match-feedback correct';
+    fb.textContent = '✅ ممتاز! أكملت الآية بشكل صحيح';
+  } else {
+    box.className = '';
+    fb.className = 'match-feedback partial';
+    fb.textContent = `📖 ${matchCount} / ${refWords.length} كلمة صحيحة — واصل القراءة`;
+  }
+}
+
+function normalizeArabic(text) {
+  return text
+    .replace(/[\u064B-\u065F\u0610-\u061A\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED]/g, '')
+    .replace(/[أإآا]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي')
+    .replace(/\s+/g, ' ').trim();
+}
+
+function resetTranscript() {
+  const box = document.getElementById('transcriptBox');
+  box.textContent = ''; box.className = '';
+  document.getElementById('matchFeedback').classList.add('hidden');
+  if (isListening) stopListening();
+}
+</script>
+</body>
+</html>
